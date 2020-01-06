@@ -13,6 +13,9 @@ default = ["console_error_panic_hook"]
 [dependencies]
 wasm-bindgen = "0.2"
 
+# Some default features cannot compile to WASM. Therefore they have been disabled.
+zip = { version = "0.5", default-features = false }
+
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for

@@ -1,17 +1,8 @@
-use zip;
-use std::io::Write;
-use std::fs::File;
+use lz4_compression::prelude::{ decompress, compress };
 
-fn main() -> zip::result::ZipResult<()> {
-    let mut w = File::create("hello_word.zip")?;
-    let mut zip = zip::ZipWriter::new(w);
+fn main(){
+    let uncompressed_data: &[u8] = b"Hello world, what's up?";
 
-    let options = zip::write::FileOptions::default();
-
-    zip.start_file("hello_world.txt", options)?;
-    zip.write(b"Hello, World!")?;
-
-    zip.finish()?;
-
-    Ok(())
+    let compressed_data = compress(uncompressed_data);
+    let decompressed_data = decompress(&compressed_data).unwrap();
 }

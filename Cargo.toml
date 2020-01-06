@@ -12,9 +12,7 @@ default = ["console_error_panic_hook"]
 
 [dependencies]
 wasm-bindgen = "0.2"
-
-# Some default features cannot compile to WASM. Therefore they have been disabled.
-zip = { version = "0.5", default-features = false }
+lz4-compression = "0.6.1"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires

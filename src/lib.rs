@@ -9,11 +9,7 @@ use wasm_bindgen::prelude::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-extern {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, servus!");
+pub fn compress(input: &[u8]) -> Vec<u8> {
+    use lz4_compression::prelude::compress;
+    compress(input)
 }

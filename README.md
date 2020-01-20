@@ -15,23 +15,40 @@ $ cargo install wasm-pack
 ```
 
 ``` bash
-$ wasm-pack build
+$ make build
 ```
 
 This command produces several files. Among them:
 
-* `pkg/servus.wasm` - the Rust library compiled to WebAssembly
-* `pkg/servus.js` - glue code between Javascript and WebAssembly.
+* `pkg/servus_bg.wasm` - the Rust library compiled to WebAssembly
+* `pkg/servus.js` - glue code between Javascript and WebAssembly
 
-Now it's time to install web app which source is located in `www/`.
+## Python
 
-```bash
-$ cd www
-$ npm install
+The `python/` folder contains 2 scripts which call into the WASM files. One
+script is using `wasmer`, the other `wasmtime`.
+
+``` bash
+$ python -m venv .env
+$ source .env/bin/activate
+$ pip install -r python/requirements.txt
 ```
 
-Start serving the web app. It will be server at http://localhost:8080.
+Now you can run the scripts:
 
-```bash
-$ npm start
+``` bash
+$ make python
+[INFO]: Checking for the Wasm target...
+[INFO]: Compiling to Wasm...
+    Finished release [optimized] target(s) in 0.02s
+[INFO]: Installing wasm-bindgen...
+[INFO]: Optional fields missing from Cargo.toml: 'description', 'repository', and 'license'. These are not necessary, but recommended
+[INFO]: :-) Done in 0.10s
+[INFO]: :-) Your wasm pkg is ready to publish at ./pkg.
+Using wasmer
+wasmer: sum of 3 and 7 is 10
+wasmer: the reverse of 'OrangeTux' is 'xuTegnarO'
+
+Using wasmtime
+wasmtime: sum of 3 and 7 is 10
 ```

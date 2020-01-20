@@ -1,25 +1,17 @@
-#[macro_use]
-mod utils;
-
-use std::str;
+extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
-// When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
-// allocator.
-#[cfg(feature = "wee_alloc")]
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
-#[wasm_bindgen]
-/// Compress input using LZ4 compression.
-pub fn compress(input: &[u8]) -> Vec<u8> {
-    use lz4_compression::prelude::compress;
-    compress(input)
+#[no_mangle]
+pub extern fn sum(x: i32, y: i32) -> i32 {
+    x + y
 }
 
 #[wasm_bindgen]
-// Decompress given input using LZ4 decompression.
-pub fn decompress(input: &[u8]) -> Vec<u8> {
-    use lz4_compression::prelude::decompress;
-    decompress(input).unwrap()
+#[no_mangle]
+pub extern fn reverse(input: Vec<u8>) -> Vec<u8> {
+    let mut input = input.clone();
+
+    input.reverse();
+
+    input
 }

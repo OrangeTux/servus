@@ -35,7 +35,11 @@ length = mem[3]
 mem = servus.memory.uint8_view()
 
 reverse = ""
-for c in mem[offset:offset+length]:
+for i, c in enumerate(mem[offset:offset+length]):
     reverse += chr(c)
+
+    # WASM doesn't have a garbage collector, so we do that manually by erasing the memory.
+    mem[i] = 0
+
 
 print(f"wasmer: the reverse of 'OrangeTux' is '{reverse}'")

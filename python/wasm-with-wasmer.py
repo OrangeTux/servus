@@ -36,7 +36,7 @@ reverse = ""
 for i, c in enumerate(mem[offset:offset+length]):
     reverse += chr(c)
 
-    # WASM doesn't have a garbage collector, so we do that manually by erasing the memory.
-    mem[i] = 0
+# Free the memory that we've used.
+servus.exports.__wbindgen_free(offset, length)
 
 print(f"wasmer: the reverse of '{data}' is '{reverse}'")

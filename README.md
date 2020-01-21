@@ -75,7 +75,7 @@ If you now open the Developer Console of your browser and visit
 http://localhost:8080 you should see this:
 
 ```
-sum of 3 and 7 is 7 index.js:5:9
-This log comes from WASM. servus.js:156:13
+sum of 3 and 7 is 10
+This log comes from WASM.
 the reverse of 'OrangeTux' is 'xuTegnarO'
 ```

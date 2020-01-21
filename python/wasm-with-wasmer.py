@@ -2,7 +2,7 @@ import os
 from wasmer import Instance
 
 __dir__ = os.path.dirname(os.path.realpath(__file__))
-file = "/../pkg/servus_bg.wasm"
+file = "/pkg/servus_bg.wasm"
 
 wasm_bytes = open(__dir__ + file, 'rb').read()
 servus = Instance(wasm_bytes)

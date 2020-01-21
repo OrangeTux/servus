@@ -1,3 +1,6 @@
+#[macro_use]
+mod utils;
+
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 

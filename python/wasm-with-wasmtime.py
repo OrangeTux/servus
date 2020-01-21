@@ -3,7 +3,7 @@ import sys
 import wasmtime
 
 __dir__ = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(__dir__ + '/../pkg/')
+sys.path.append(__dir__ + '/pkg/')
 
 import servus_bg as servus
 

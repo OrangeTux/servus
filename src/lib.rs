@@ -12,10 +12,8 @@ pub extern fn sum(x: i32, y: i32) -> i32 {
 
 #[no_mangle]
 #[wasm_bindgen]
-pub extern fn reverse(input: Vec<u8>) -> Vec<u8> {
-    let mut input = input.clone();
+pub extern fn reverse(input: String) -> String {
+    log!("{:?}", input);
 
-    input.reverse();
-
-    input
+    input.chars().rev().collect::<String>()
 }

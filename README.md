@@ -52,3 +52,30 @@ wasmer: the reverse of 'OrangeTux' is 'xuTegnarO'
 Using wasmtime
 wasmtime: sum of 3 and 7 is 10
 ```
+
+## JavaScript
+
+The `www/` directory contains a file `index.js` which calls into the WASM
+files. The result of those calls is written the the browser's console.
+
+Build the WASM file for the browser environment:
+
+``` bash
+$ make javascript
+```
+
+Now start the webserver:
+
+``` bash
+$ cd wwww/
+$ npm start
+```
+
+If you now open the Developer Console of your browser and visit
+http://localhost:8080 you should see this:
+
+```
+sum of 3 and 7 is 7 index.js:5:9
+This log comes from WASM. servus.js:156:13
+the reverse of 'OrangeTux' is 'xuTegnarO'
+```

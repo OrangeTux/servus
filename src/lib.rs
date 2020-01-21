@@ -13,7 +13,7 @@ pub extern fn sum(x: i32, y: i32) -> i32 {
 #[no_mangle]
 #[wasm_bindgen]
 pub extern fn reverse(input: String) -> String {
-    log!("{:?}", input);
+    log!("This log comes from WASM.");
 
     input.chars().rev().collect::<String>()
 }

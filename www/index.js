@@ -1,4 +1,4 @@
 import * as wasm from "servus";
 
-console.log(wasm.sum(3, 4));
-console.log(wasm.reverse("servus"));
+console.log("sum of 3 and 7 is " + wasm.sum(3, 4));
+console.log("the reverse of 'OrangeTux' is '"+ wasm.reverse("OrangeTux") + "'");

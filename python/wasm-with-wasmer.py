@@ -10,33 +10,92 @@ servus = Instance(wasm_bytes)
 sum = servus.exports.sum(3, 7)
 print(f'wasmer: sum of 3 and 7 is {sum}')
 
-data = b'OrangeTux'
 
-length = len(data)
+def allocate(data: bytes) -> int:
+    """ Allocate the given bytes in WASM memory. Pointer to start of the
+    allocated data is returned.
+    """
+    length = len(data)
 
-# Use the memory allocator from wasm-bindgen to allocate some memory.
-offset = servus.exports.__wbindgen_malloc(length)
+    # Use the memory allocator from wasm-bindgen to allocate some memory.
+    offset = servus.exports.__wbindgen_malloc(length)
 
-for i, c in enumerate(data):
-    servus.memory.uint8_view()[offset + i] = c
+    for i, c in enumerate(data):
+        servus.memory.uint8_view()[offset + i] = c
 
-# The second and third argument are respectively the offset in memory where
-# data starts and the length of the data
-servus.exports.reverse(8, offset, length)
+    return offset
 
-# The call to `reverse()` doesn't return a return value. Instead the offset and
-# and size of the data are written to index 2 and 3 of the 32 bit paged memory.
-mem = servus.memory.uint32_view()
-offset = mem[2]
-length = mem[3]
 
-mem = servus.memory.uint8_view()
+def free(offset: int, length: int):
+    """ Free WASM memory. """
+    servus.exports.__wbindgen_free(offset, length)
 
-reverse = ""
-for i, c in enumerate(mem[offset:offset+length]):
-    reverse += chr(c)
 
-# Free the memory that we've used.
-servus.exports.__wbindgen_free(offset, length)
+def reverse(data: bytes) -> bytes:
+    """ Reverse the given bytes. """
+    offset = allocate(data)
+    length = len(data)
 
-print(f"wasmer: the reverse of '{data}' is '{reverse}'")
+    # The second and third argument are respectively the offset in memory where
+    # data starts and the length of the data
+    servus.exports.reverse(8, offset, length)
+
+    # The call to `reverse()` doesn't return a return value. Instead the offset
+    # and and size of the data are written to index 2 and 3 of the 32 bit paged
+    # memory.
+    mem = servus.memory.uint32_view()
+    offset = mem[2]
+    length = mem[3]
+
+    mem = servus.memory.uint8_view()
+    output = mem[offset:offset+length]
+
+    free(offset, length)
+
+    return bytes(output)
+
+
+def compress(data: bytes) -> bytes:
+    """ Compress the given bytes using L4Z. """
+    offset = allocate(data)
+    length = len(data)
+
+    servus.exports.compress(8, offset, length)
+
+    mem = servus.memory.uint32_view()
+    offset = mem[2]
+    length = mem[3]
+
+    mem = servus.memory.uint8_view()
+
+    data = mem[offset:offset+length]
+    free(offset, length)
+
+    return bytes(data)
+
+
+def decompress(data: bytes) -> bytes:
+    """ Decompress the given bytes using L4Z. """
+    offset = allocate(data)
+    length = len(data)
+
+    servus.exports.decompress(8, offset, length)
+
+    mem = servus.memory.uint32_view()
+    offset = mem[2]
+    length = mem[3]
+
+    mem = servus.memory.uint8_view()
+
+    data = mem[offset:offset+length]
+    free(offset, length)
+
+    return bytes(data)
+
+
+reversed = reverse(b'OrangeTux')
+print(f"wasmer: the reverse of 'OrangeTux' is '{reversed}'")
+compressed = compress(b'OrangeTux')
+print(f"wasmer: 'OrangeTux' compresses to {compressed}")
+decompressed = decompress(compressed)
+print(f"wasmer: {compressed} decompresses to {decompressed}")

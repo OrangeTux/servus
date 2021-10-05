@@ -8,9 +8,9 @@ python: build
 	@wasm-pack build --out-dir python/pkg
 
 	@echo 'Using wasmer'
-	@python python/wasm-with-wasmer.py
+	@cd python; poetry run python wasm-with-wasmer.py
 	@echo
 	@echo 'Using wasmtime'
-	@python python/wasm-with-wasmtime.py
+	@cd python; poetry run python wasm-with-wasmtime.py
 
 javascript: build

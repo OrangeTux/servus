@@ -26,12 +26,12 @@ This command produces several files. Among them:
 ## Python
 
 The `python/` folder contains 2 scripts which call into the WASM files. One
-script is using `wasmer`, the other `wasmtime`.
+script is using `wasmer`, the other `wasmtime`. Make sure to have [poetry]
+installed and install the Python project:
 
 ``` bash
-$ python3.7 -m venv .env
-$ source .env/bin/activate
-$ pip install -r python/requirements.txt
+$ cd python
+$ poetry install 
 ```
 
 Now you can run the scripts:
@@ -80,3 +80,5 @@ sum of 3 and 7 is 10
 This log comes from WASM.
 the reverse of 'OrangeTux' is 'xuTegnarO'
 ```
+
+[poetry]: https://python-poetry.org/docs/#installation

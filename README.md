@@ -29,7 +29,7 @@ The `python/` folder contains 2 scripts which call into the WASM files. One
 script is using `wasmer`, the other `wasmtime`.
 
 ``` bash
-$ python -m venv .env
+$ python3.7 -m venv .env
 $ source .env/bin/activate
 $ pip install -r python/requirements.txt
 ```
@@ -68,6 +68,7 @@ Now start the webserver:
 
 ``` bash
 $ cd wwww/
+$ npm install
 $ npm start
 ```
 

@@ -25,7 +25,7 @@ This command produces several files. Among them:
 
 ## Python
 
-The `python/` folder contains 2 scripts which that uses a Wasm file to
+The `python/` folder contains a script that uses a Wasm file to
 (de)compress files using lz4.
 
 ``` bash
@@ -46,7 +46,7 @@ ARGS:
     <file> Path to file that needs to be (de)compressed.
 ```
 
-To decompress a file:
+To compress a file:
 
 ``` bash
 venv> ./lz4.py compress pyproject.toml
@@ -55,7 +55,7 @@ Compressed pyproject.toml (436 bytes) to pyproject.toml.lz4 (333 bytes), reducti
 
 To decompress a file:
 
-```
+``` bash
 venv> ./lz4.py decompress pyproject.toml.lz4
 Decompressed pyproject.toml.lz4 to pyproject.toml.
 ```

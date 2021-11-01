@@ -21,6 +21,11 @@ async function compressFile () {
 // Decompress file using LZ4.
 async function decompressFile () {
   const file = this.files[0]
+  if (file.name.split('.').pop() !== 'lz4') {
+    alert('File must have .lz4 extension')
+    return
+  }
+
   // Read content of binary file...
   let compressed = await file.arrayBuffer()
 
@@ -32,7 +37,7 @@ async function decompressFile () {
 
   /// ... And turn it into readable text.
   decompressed = new TextDecoder('utf-8').decode(decompressed)
-  download(decompressed, file.name, 'text/plain')
+  download(decompressed, file.name.split('.').slice(0, -1).join('.'), 'text/plain')
 }
 
 // Allow user to download given data as a file.

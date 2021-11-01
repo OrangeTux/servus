@@ -5,7 +5,15 @@
     <title>Hello wasm-pack!</title>
   </head>
   <body>
-    <input id="file-upload" type="file" />
+    <label for="compress">Select file for compression</label>
+    <input id="compress" name="compress" type="file" />
+
+    <br />
+
+    <label for="decompress">Select file for decompression</label>
+    <input id="decompress" name="decompress" type="file" />
+
+    <a id="download" href="" hidden download></a>
     <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
     <script src="./bootstrap.js"></script>
   </body>

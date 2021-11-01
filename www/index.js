@@ -1,17 +1,47 @@
-import * as wasm from "servus";
+import * as wasm from 'servus'
 
-console.log("sum of 3 and 7 is " + wasm.sum(3, 7));
-console.log("the reverse of 'OrangeTux' is '"+ wasm.reverse("OrangeTux") + "'");
+document.getElementById('compress').addEventListener('change', compressFile, false)
+document.getElementById('decompress').addEventListener('change', decompressFile, false)
 
-let input = "OrangeTux"
-let compressed = wasm.compress(input);
-let uncompressed = wasm.decompress(compressed);
-console.log(uncompressed);
+// Compress selected file using LZ4.
+async function compressFile () {
+  const file = this.files[0]
 
-var output = "";
+  // Read content of a file...
+  let uncompressed = await file.text()
 
-for (var i = 0; i < uncompressed.length; i++) {
-	output += String.fromCharCode(uncompressed[i]);
+  // ... and turn it into a Uint8Array.
+  uncompressed = new TextEncoder().encode(uncompressed)
+
+  // Compress the file...
+  const compressed = wasm.compress(uncompressed)
+  download(compressed, `${file.name}.lz4`, 'application/octect-stream')
 }
 
-console.log(output);
+// Decompress file using LZ4.
+async function decompressFile () {
+  const file = this.files[0]
+  // Read content of binary file...
+  let compressed = await file.arrayBuffer()
+
+  // ... and turn it unto a Uint8Array.
+  compressed = new Uint8Array(compressed)
+
+  // Decompress it...
+  let uncompressedContent = wasm.decompress(compressed)
+
+  /// ... And turn it into readable text.
+  uncompressedContent = new TextDecoder('utf-8').decode(uncompressedContent)
+  download(uncompressedContent, file.name, 'text/plain')
+}
+
+// Allow user to download given data as a file.
+function download (data, fileName, mimeType) {
+  const blob = new Blob([data], { type: mimeType })
+
+  const url = URL.createObjectURL(blob)
+  const a = document.getElementById('download')
+  a.href = url
+  a.download = fileName
+  a.click()
+}

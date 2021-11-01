@@ -1,9 +1,9 @@
 # Servus
 
-Using this project I'm exploring WebAssembly and it's ecosystem. I'm trying to
-build a simple file sharing web application using Python, Rust, WebAssmebly
-and Javascript.
-
+Using this project I'm exploring WebAssembly and it's ecosystem. This projects
+make a Rust implementation of the lz4 compression algorithm available in
+WebAssembly. A Python and Javascript implementation are provided that allow
+users to (de)compress files. Both implementation use `Wasm`.
 
 ## Quickstart
 
@@ -25,32 +25,39 @@ This command produces several files. Among them:
 
 ## Python
 
-The `python/` folder contains 2 scripts which call into the WASM files. One
-script is using `wasmer`, the other `wasmtime`. Make sure to have [poetry]
-installed and install the Python project:
+The `python/` folder contains 2 scripts which that uses a Wasm file to
+(de)compress files using lz4.
 
 ``` bash
 $ cd python
 $ poetry install 
+$ poetry shell
+$ ./lz4.py --help
+lz4 archive utility using Wasm.
+
+USAGE:
+    lz4 compress <file>
+    lz4 decompress <file>
+
+FLAGS:
+        --help  Prints help information
+
+ARGS:
+    <file> Path to file that needs to be (de)compressed.
 ```
 
-Now you can run the scripts:
+To decompress a file:
 
 ``` bash
-$ make python
-[INFO]: Checking for the Wasm target...
-[INFO]: Compiling to Wasm...
-    Finished release [optimized] target(s) in 0.02s
-[INFO]: Installing wasm-bindgen...
-[INFO]: Optional fields missing from Cargo.toml: 'description', 'repository', and 'license'. These are not necessary, but recommended
-[INFO]: :-) Done in 0.10s
-[INFO]: :-) Your wasm pkg is ready to publish at ./pkg.
-Using wasmer
-wasmer: sum of 3 and 7 is 10
-wasmer: the reverse of 'OrangeTux' is 'xuTegnarO'
+venv> ./lz4.py compress pyproject.toml
+Compressed pyproject.toml (436 bytes) to pyproject.toml.lz4 (333 bytes), reduction of 24%.
+```
 
-Using wasmtime
-wasmtime: sum of 3 and 7 is 10
+To decompress a file:
+
+```
+venv> ./lz4.py decompress pyproject.toml.lz4
+Decompressed pyproject.toml.lz4 to pyproject.toml.
 ```
 
 ## JavaScript
@@ -60,11 +67,7 @@ files. The result of those calls is written the the browser's console.
 
 Build the WASM file for the browser environment:
 
-``` bash
-$ make javascript
-```
-
-Now start the webserver:
+Start the webserver:
 
 ``` bash
 $ cd wwww/
@@ -72,13 +75,7 @@ $ npm install
 $ npm start
 ```
 
-If you now open the Developer Console of your browser and visit
-http://localhost:8080 you should see this:
-
-```
-sum of 3 and 7 is 10
-This log comes from WASM.
-the reverse of 'OrangeTux' is 'xuTegnarO'
-```
+Open http://localhost:8080 in your browser. The page shows two form fields to
+upload files. One to compress files, another to decompress files. 
 
 [poetry]: https://python-poetry.org/docs/#installation

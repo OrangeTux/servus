@@ -1,4 +1,18 @@
+#!/usr/bin/env python
+""" lz4 archive utility using Wasm.
+
+USAGE:
+    lz4 compress <file>
+    lz4 decompress <file>
+
+FLAGS:
+        --help  Prints help information
+
+ARGS:
+    <file> Path to file that needs to be (de)compressed.
+"""
 import os
+import sys
 from wasmer import engine, Store, Module, Instance
 from wasmer_compiler_cranelift import Compiler
 
@@ -9,9 +23,6 @@ store = Store(engine.JIT(Compiler))
 wasm_bytes = open(__dir__ + file, "rb").read()
 module = Module(store, wasm_bytes)
 servus = Instance(module)
-
-sum = servus.exports.sum(3, 7)
-print(f"wasmer: sum of 3 and 7 is {sum}")
 
 
 def allocate(data: bytes) -> int:
@@ -95,10 +106,54 @@ def decompress(data: bytes) -> bytes:
 
     return bytes(data)
 
+def compress_file(path: str):
+    with open(input, 'rb') as f:
+        data = f.read()
+        compressed_data = compress(data)
 
-reversed = reverse(b"OrangeTux")
-print(f"wasmer: the reverse of 'OrangeTux' is '{reversed}'")
-compressed = compress(b"OrangeTux")
-print(f"wasmer: 'OrangeTux' compresses to {compressed}")
-decompressed = decompress(compressed)
-print(f"wasmer: {compressed} decompresses to {decompressed}")
+    output = f'{path}.lz4'
+    with open(output, 'wb+') as f:
+        f.write(compressed_data)
+
+    print(f'Compressed {path} ({len(data)} bytes) to {output} ({len(compressed_data)} bytes), reduction of {100 - int((len(compressed_data) / len(data)) * 100)}%.')
+
+def decompress_file(path: str):
+    with open(input, 'rb') as f:
+        data = f.read()
+        uncompressed_data = decompress(data)
+    output = path
+    if path.endswith('.lz4'):
+        output = path.rsplit('.', 1)[0]
+
+    with open(output, 'wb+') as f:
+        f.write(uncompressed_data)
+
+    print(f'Decompressed {path} to {output}.')
+
+if __name__ == '__main__':
+    try:
+        if sys.argv[1] == '--help':
+            print(__doc__)
+            sys.exit(0)
+    except IndexError:
+        pass
+
+    if len(sys.argv) != 3:
+        print("Invalid number of arguments.")
+        print(__doc__)
+        sys.exit(1)
+
+    command = sys.argv[1]
+    input = sys.argv[2]
+
+    if command == 'compress':
+        compress_file(input)
+
+    elif command == 'decompress':
+        decompress_file(input)
+    else:
+        print("Invalid command.")
+        print(__doc__)
+        sys.exit(1)
+
+

@@ -8,13 +8,13 @@ async function compressFile () {
   const file = this.files[0]
 
   // Read content of a file...
-  let uncompressed = await file.text()
+  let decompressed = await file.text()
 
   // ... and turn it into a Uint8Array.
-  uncompressed = new TextEncoder().encode(uncompressed)
+  decompressed = new TextEncoder().encode(decompressed)
 
   // Compress the file...
-  const compressed = wasm.compress(uncompressed)
+  const compressed = wasm.compress(decompressed)
   download(compressed, `${file.name}.lz4`, 'application/octect-stream')
 }
 
@@ -28,11 +28,11 @@ async function decompressFile () {
   compressed = new Uint8Array(compressed)
 
   // Decompress it...
-  let uncompressedContent = wasm.decompress(compressed)
+  let decompressed = wasm.decompress(compressed)
 
   /// ... And turn it into readable text.
-  uncompressedContent = new TextDecoder('utf-8').decode(uncompressedContent)
-  download(uncompressedContent, file.name, 'text/plain')
+  decompressed = new TextDecoder('utf-8').decode(decompressed)
+  download(decompressed, file.name, 'text/plain')
 }
 
 // Allow user to download given data as a file.
